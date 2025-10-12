@@ -1,12 +1,18 @@
-<div id="<%= dom_id club %>">
-  <p>
-    <strong>Name:</strong>
-    <%= club.name %>
-  </p>
-
-  <p>
-    <strong>Description:</strong>
-    <%= club.description %>
-  </p>
-
+<div id="<%= dom_id club %>" class="card h-100 shadow-sm">
+  <div class="card-header bg-primary text-white">
+    <h5 class="card-title mb-0">
+      <i class="bi bi-bookmark-fill me-2"></i><%= club.name %>
+    </h5>
+  </div>
+  <div class="card-body d-flex flex-column">
+    <p class="card-text flex-grow-1">
+      <%= club.description.present? ? club.description : 
+          content_tag(:em, "No description provided", class: "text-muted") %>
+    </p>
+    <div class="mt-auto">
+      <%= link_to club, class: "btn btn-outline-primary btn-sm" do %>
+        <i class="bi bi-eye me-1"></i>View Details
+      <% end %>
+    </div>
+  </div>
 </div>

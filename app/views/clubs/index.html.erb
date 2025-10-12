@@ -1,16 +1,42 @@
 
 <% content_for :title, "Clubs" %>
 
-<h1>Clubs</h1>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-4 text-primary">
+          <i class="bi bi-people-fill me-2"></i>Clubs
+        </h1>
+        <%= link_to new_club_path, class: "btn btn-primary btn-lg" do %>
+          <i class="bi bi-plus-circle me-2"></i>New Club
+        <% end %>
+      </div>
+    </div>
+  </div>
 
-<div id="clubs">
-  <% @clubs.each do |club| %>
-    <%= render club %>
-    <p>
-      <%= link_to "Show this club", club %>
-    </p>
-
-  <% end %>
+  <div class="row" id="clubs">
+    <% if @clubs.any? %>
+      <% @clubs.each do |club| %>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+          <%= render club %>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="col-12">
+        <div class="text-center py-5">
+          <div class="card border-0">
+            <div class="card-body">
+              <i class="bi bi-emoji-frown display-1 text-muted mb-3"></i>
+              <h3 class="text-muted">No clubs yet</h3>
+              <p class="text-muted mb-4">Get started by creating your first club!</p>
+              <%= link_to new_club_path, class: "btn btn-primary btn-lg" do %>
+                <i class="bi bi-plus-circle me-2"></i>Create Your First Club
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
 </div>
-
-<%= link_to "New club", new_club_path %>
