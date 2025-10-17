@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_11_214352) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_17_213608) do
   create_table "clubs", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -26,6 +26,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_11_214352) do
     t.datetime "updated_at", null: false
     t.string "location"
     t.index ["club_id"], name: "index_events_on_club_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "name"
+    t.string "email"
+    t.string "google_id"
+    t.string "avatar_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   add_foreign_key "events", "clubs"

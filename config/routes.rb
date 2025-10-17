@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  # OAuth routes
+  get '/auth/:provider', to: 'auth#new', as: :auth
+  get '/auth/:provider/callback', to: 'auth#callback'
+  get '/auth/failure', to: 'auth#failure'
+  get '/logout', to: 'auth#logout'
+  
   resources :events
   resources :clubs
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
