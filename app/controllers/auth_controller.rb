@@ -2,7 +2,6 @@ class AuthController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:callback, :failure]
 
   def new
-    # Manually construct Google OAuth URL to avoid CSRF issues
     client_id = ENV.fetch("GOOGLE_CLIENT_ID")
     redirect_uri = 'http://localhost:3000/auth/google_oauth2/callback'
     scope = 'openid email profile'

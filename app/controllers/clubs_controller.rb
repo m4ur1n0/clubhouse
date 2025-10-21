@@ -8,6 +8,8 @@ class ClubsController < ApplicationController
 
   # GET /clubs/1 or /clubs/1.json
   def show
+    @club = Club.find(params[:id])
+    @events = @club.events.order(date: :asc)
   end
 
   # GET /clubs/new
@@ -18,7 +20,7 @@ class ClubsController < ApplicationController
   # GET /clubs/1/edit
   def edit
   end
-
+  
   # POST /clubs or /clubs.json
   def create
     @club = Club.new(club_params)
@@ -55,11 +57,6 @@ class ClubsController < ApplicationController
       format.html { redirect_to clubs_path, notice: "Club was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end
-  end
-
-  def show
-    @club = Club.find(params[:id])
-    @events = @club.events.order(date: :asc)
   end
 
   private
