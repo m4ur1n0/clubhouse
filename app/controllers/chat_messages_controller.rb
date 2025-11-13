@@ -2,6 +2,8 @@ class ChatMessagesController < ApplicationController
   before_action :require_user!
   before_action :set_club
   before_action :authorize_membership!
+  before_action :set_chat_message, only: %i[edit update destroy]
+  before_action -> { authorize_message_owner!(@chat_message) }, only: %i[edit update destroy]
 
   def create
     @chat_message = @club.chat_messages.build(chat_message_params)
@@ -15,10 +17,31 @@ class ChatMessagesController < ApplicationController
     end
   end
 
+  def edit
+
+  end
+
+  def update
+    if @chat_message.update(chat_message_params.merge(edited_at: Time.current))
+      redirect_to club_path(@club, anchor: "club-chat"), notice: "Message updated."
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @chat_message.destroy
+    redirect_to club_path(@club, anchor: "club-chat"), notice: "Message deleted."
+  end
+
   private
 
   def set_club
     @club = Club.find(params[:club_id])
+  end
+
+  def set_chat_message
+    @chat_message = @club.chat_messages.find(params[:id])
   end
 
   def authorize_membership!

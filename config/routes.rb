@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   resources :events
   resources :clubs do
     resource :membership, only: [:create, :destroy]
-    resources :chat_messages, only: [:create]
+    resources :chat_messages, only: [:create, :edit, :update, :destroy]
     resources :events, only: [:index, :new, :create, :edit, :update, :destroy]
   end
   

@@ -23,5 +23,8 @@ class ApplicationController < ActionController::Base
     redirect_to club_path(club), alert: 'You are not authorized to perform this action.' 
   end
 
-
+  def authorize_message_owner!(message)
+    return if message.user == current_user
+    redirect_to club_path(message.club), alert: "You are not authorized to perform this action."
+  end
 end
