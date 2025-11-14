@@ -27,7 +27,8 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
   #   root "/clubs"
 
-
+  get "/auth/google_oauth2", to: "auth#new"
+  get "/auth/google_oauth2/callback", to: "auth#callback"
 
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest

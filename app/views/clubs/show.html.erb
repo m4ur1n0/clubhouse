@@ -147,7 +147,7 @@
         <p class="text-muted mb-0">Join this club to read and participate in the chat.</p>
       <% else %>
         <p class="text-muted mb-3">Sign in and join this club to access the chat.</p>
-        <%= link_to "Sign in with Google", "/auth/google_oauth2", class: "btn btn-northwestern-purple" %>
+        <%= link_to "Sign in with Google", auth_google_oauth2_path(), class: "btn btn-northwestern-purple" %>
       <% end %>
     </div>
   </div>

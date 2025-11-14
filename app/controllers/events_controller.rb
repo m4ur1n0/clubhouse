@@ -101,7 +101,7 @@ class EventsController < ApplicationController
 
     # YOU WILL HAVE TO EDIT THIS WEHN YOU UPDATE THE AUTH SYSTEM!!!!!
     unless current_user
-        redirect_to new_auth_path(return_to: event_path(@event)), alert: 'You must be signed in to RSVP.'
+        redirect_to auth_google_oauth2_path(return_to: event_path(@event)), alert: 'You must be signed in to RSVP.'
         return
     end
 
@@ -124,7 +124,7 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
 
     unless current_user
-        redirect_to new_auth_path(return_to: event_path(@event)), alert: 'Please sign in first.'
+        redirect_to auth_google_oauth2_path(return_to: event_path(@event)), alert: 'Please sign in first.'
         return
     end
 
