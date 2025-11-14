@@ -4,7 +4,7 @@ class AuthController < ApplicationController
   def new
     client_id = ENV.fetch("GOOGLE_CLIENT_ID")
     redirect_uri = Rails.env.production? ? "https://clubhouse-bb0e602288cc.herokuapp.com/auth/google_oauth2/callback" : 'http://localhost:3000/auth/google_oauth2/callback'
-    scope = 'openid email profile'
+    scope = 'openid email profile https://www.googleapis.com/auth/calendar'
     state = SecureRandom.hex(16)
     
     oauth_url = "https://accounts.google.com/o/oauth2/v2/auth?" +
@@ -37,6 +37,10 @@ class AuthController < ApplicationController
       
       if token_response.success?
         access_token = token_response['access_token']
+        refresh_token = token_response['refresh_token']
+        expires_in = token_response['expires_in']
+        # might need .seconds here -- but i think it's in seconds already
+        expires_at = Time.current + expires_in.to_i
         
         # Get user info from Google
         user_response = HTTParty.get('https://www.googleapis.com/oauth2/v2/userinfo', {
