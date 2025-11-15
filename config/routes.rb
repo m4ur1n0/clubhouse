@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
   #   root "/clubs"
 
+  # YOU MAY WANT TO UPDATE THIS WHEN YOU FIX AUTH
   get "/auth/google_oauth2", to: "auth#new"
   get "/auth/google_oauth2/callback", to: "auth#callback"
 
