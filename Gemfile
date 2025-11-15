@@ -63,6 +63,13 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # Backend test stack
+  gem "rspec"
+  gem "cucumber-rails", require: false
+  gem "database_cleaner-active_record"
+  gem "factory_bot_rails"
+  gem "shoulda-matchers"
 end
 
 group :development do

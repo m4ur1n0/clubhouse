@@ -1,0 +1,1 @@
+default: spec/features --require spec/features --format progress --publish-quiet
