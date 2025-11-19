@@ -5,7 +5,25 @@ class ClubsController < ApplicationController
 
   # GET /clubs or /clubs.json
   def index
-    @clubs = Club.all
+    @active_tab = params[:tab] || (user_signed_in? ? 'my_clubs' : 'discover')
+    
+    if user_signed_in?
+      if @active_tab == 'my_clubs'
+        # Show clubs where user is owner or member
+        owned_club_ids = current_user.clubs.pluck(:id)
+        member_club_ids = current_user.memberships.pluck(:club_id)
+        @clubs = Club.where(id: owned_club_ids + member_club_ids).distinct
+      else
+        # Show clubs where user is NOT a member or owner
+        owned_club_ids = current_user.clubs.pluck(:id)
+        member_club_ids = current_user.memberships.pluck(:club_id)
+        @clubs = Club.where.not(id: owned_club_ids + member_club_ids)
+      end
+    else
+      # Non-logged in users only see discover
+      @clubs = Club.all
+      @active_tab = 'discover'
+    end
   end
 
   # GET /clubs/1 or /clubs/1.json

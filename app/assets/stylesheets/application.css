@@ -108,6 +108,33 @@ body {
     margin-top: auto;
 }
 
+/* Tab styling */
+.club-tabs .nav-link {
+    color: #6c757d;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.club-tabs .nav-link:hover {
+    color: var(--northwestern-purple);
+    border-bottom-color: var(--northwestern-purple-30);
+    background-color: rgba(78, 42, 132, 0.05);
+}
+
+.club-tabs .nav-link.active {
+    color: var(--northwestern-purple);
+    border-bottom-color: var(--northwestern-purple);
+    background-color: rgba(78, 42, 132, 0.08);
+    font-weight: 600;
+}
+
+.club-tabs .nav-link i {
+    font-size: 1rem;
+}
+
 /* Consistent club card dimensions */
 .club-card {
     min-height: 300px;

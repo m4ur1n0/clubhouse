@@ -1,7 +1,7 @@
 
 <% content_for :title, "Clubs" %>
 
-<section class="container-fluid py-4">
+<div class="container-fluid py-4">
   <div class="row">
     <div class="col-12">
       <div class="d-flex justify-content-between align-items-center mb-4">
@@ -21,10 +21,30 @@
           <% end %>
         <% end %>
       </div>
-      <hr class="mb-4">
+
+      <%# Tab Navigation %>
+      <ul class="nav nav-tabs mb-4 club-tabs" role="tablist">
+        <% if user_signed_in? %>
+          <li class="nav-item" role="presentation">
+            <%= link_to clubs_path(tab: 'my_clubs'), 
+                class: "nav-link #{'active' if @active_tab == 'my_clubs'}", 
+                data: { turbo_frame: "_top" } do %>
+              <i class="bi bi-person-heart me-2"></i>My Clubs
+            <% end %>
+          </li>
+        <% end %>
+        <li class="nav-item" role="presentation">
+          <%= link_to clubs_path(tab: 'discover'), 
+              class: "nav-link #{'active' if @active_tab == 'discover'}", 
+              data: { turbo_frame: "_top" } do %>
+            <i class="bi bi-compass me-2"></i>Discover
+          <% end %>
+        </li>
+      </ul>
     </div>
   </div>
 
+  <%# Tab Content %>
   <div class="row g-4" id="clubs">
     <% if @clubs.any? %>
       <% @clubs.each do |club| %>
@@ -37,16 +57,42 @@
         <div class="text-center py-5">
           <div class="card border-0 bg-light">
             <div class="card-body p-5">
-              <i class="bi bi-people display-1 text-northwestern-purple mb-4"></i>
-              <h3 class="fw-bold mb-3">No clubs yet</h3>
-              <p class="text-muted mb-4">Be the first to create an amazing club!</p>
-              <% if user_signed_in? %>
-                <%= link_to new_club_path, class: "btn btn-northwestern-purple btn-lg shadow-sm" do %>
-                  <i class="bi bi-plus-circle me-2"></i>Create Your First Club
-                <% end %>
+              <% if @active_tab == 'my_clubs' %>
+                <i class="bi bi-person-heart display-1 text-northwestern-purple mb-4"></i>
+                <h3 class="fw-bold mb-3">You haven't joined any clubs yet</h3>
+                <p class="text-muted mb-4">Explore clubs in the Discover tab or create your own!</p>
+                <div class="d-flex gap-3 justify-content-center">
+                  <%= link_to clubs_path(tab: 'discover'), class: "btn btn-outline-secondary btn-lg" do %>
+                    <i class="bi bi-compass me-2"></i>Discover Clubs
+                  <% end %>
+                  <%= link_to new_club_path, class: "btn btn-northwestern-purple btn-lg shadow-sm" do %>
+                    <i class="bi bi-plus-circle me-2"></i>Create a Club
+                  <% end %>
+                </div>
               <% else %>
-                <%= link_to "/auth/google_oauth2", class: "btn btn-northwestern-purple btn-lg shadow-sm" do %>
-                  <i class="bi bi-plus-circle me-2"></i>Create Your First Club
+                <i class="bi bi-compass display-1 text-northwestern-purple mb-4"></i>
+                <h3 class="fw-bold mb-3">
+                  <% if user_signed_in? %>
+                    You've discovered all the clubs!
+                  <% else %>
+                    No clubs yet
+                  <% end %>
+                </h3>
+                <p class="text-muted mb-4">
+                  <% if user_signed_in? %>
+                    You're already a member of all available clubs, or be the first to create a new one!
+                  <% else %>
+                    Be the first to create an amazing club!
+                  <% end %>
+                </p>
+                <% if user_signed_in? %>
+                  <%= link_to new_club_path, class: "btn btn-northwestern-purple btn-lg shadow-sm" do %>
+                    <i class="bi bi-plus-circle me-2"></i>Create a Club
+                  <% end %>
+                <% else %>
+                  <%= link_to "/auth/google_oauth2", class: "btn btn-northwestern-purple btn-lg shadow-sm" do %>
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Sign in to Create Club
+                  <% end %>
                 <% end %>
               <% end %>
             </div>
