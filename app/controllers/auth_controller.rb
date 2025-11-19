@@ -1,13 +1,13 @@
 class AuthController < ApplicationController
-  skip_before_action :verify_authenticity_token, only: [:callback, :failure]
+  skip_before_action :verify_authenticity_token, only: [ :callback, :failure ]
 
   def new
     client_id = ENV.fetch("GOOGLE_CLIENT_ID")
-    redirect_uri = Rails.env.production? ? "https://clubhouse-bb0e602288cc.herokuapp.com/auth/google_oauth2/callback" : 'http://localhost:3000/auth/google_oauth2/callback'
-    scope = 'openid email profile https://www.googleapis.com/auth/calendar'
+    redirect_uri = Rails.env.production? ? "https://clubhouse-bb0e602288cc.herokuapp.com/auth/google_oauth2/callback" : "http://localhost:3000/auth/google_oauth2/callback"
+    scope = "openid email profile https://www.googleapis.com/auth/calendar"
     state = SecureRandom.hex(16)
     session[:return_to] = params[:return_to] if params[:return_to].present?
-    
+
     oauth_url = "https://accounts.google.com/o/oauth2/v2/auth?" +
                 "client_id=#{client_id}&" +
                 "redirect_uri=#{CGI.escape(redirect_uri)}&" +
@@ -15,7 +15,7 @@ class AuthController < ApplicationController
                 "response_type=code&" +
                 "access_type=offline&" +
                 "state=#{state}"
-    
+
     redirect_to oauth_url, allow_other_host: true
   end
 
@@ -25,10 +25,10 @@ class AuthController < ApplicationController
     state = params[:state]
 
     if code.blank?
-        redirect_to root_path, alert: 'No authorization code received!'
+        redirect_to root_path, alert: "No authorization code received!"
         return
     end
-    
+
     # eschange code for access and refresh
     token_payload = {
         client_id: ENV.fetch("GOOGLE_CLIENT_ID"),
@@ -37,7 +37,7 @@ class AuthController < ApplicationController
         grant_type: "authorization_code",
         redirect_uri: Rails.env.production? ?
         "https://clubhouse-bb0e602288cc.herokuapp.com/auth/google_oauth2/callback" :
-        'http://localhost:3000/auth/google_oauth2/callback'
+        "http://localhost:3000/auth/google_oauth2/callback"
     }
     token_response = HTTParty.post(
         "https://oauth2.googleapis.com/token",
@@ -46,7 +46,7 @@ class AuthController < ApplicationController
     )
 
     unless token_response.success?
-        redirect_to root_path, alert: 'Failed to obtain access token!'
+        redirect_to root_path, alert: "Failed to obtain access token!"
         return
     end
 
@@ -56,10 +56,10 @@ class AuthController < ApplicationController
     expires_at = Time.current + expires_in.to_i
 
     # fetch google profile
-    user_response = HTTParty.get("https://www.googleapis.com/oauth2/v2/userinfo", headers: {"Authorization" => "Bearer #{access_token}"})
-    
+    user_response = HTTParty.get("https://www.googleapis.com/oauth2/v2/userinfo", headers: { "Authorization" => "Bearer #{access_token}" })
+
     unless user_response.success?
-        redirect_to root_path, alert: 'Failed to fetch user info!'
+        redirect_to root_path, alert: "Failed to fetch user info!"
         return
     end
 
@@ -84,23 +84,22 @@ class AuthController < ApplicationController
             # DO NOT show a notice, as RSVP has a more important notice
             redirect_to return_to
         else
-            redirect_to root_path, notice: 'Successfully signed in with Google!'
+            redirect_to root_path, notice: "Successfully signed in with Google!"
         end
 
 
     else
         Rails.logger.error("Failed to save user: #{user.errors.full_messages.join(', ')}")
-        redirect_to root_path, alert: 'Failed to save user!'
+        redirect_to root_path, alert: "Failed to save user!"
     end
-
   end
 
   def failure
-    redirect_to root_path, alert: 'Authentication failed!'
+    redirect_to root_path, alert: "Authentication failed!"
   end
 
   def logout
     session[:user_id] = nil
-    redirect_to root_path, notice: 'Successfully signed out!'
+    redirect_to root_path, notice: "Successfully signed out!"
   end
 end

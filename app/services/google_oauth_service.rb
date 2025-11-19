@@ -1,5 +1,5 @@
 class GoogleOauthService
-    TOKEN_URL = 'https://oauth2.googleapis.com/token'
+    TOKEN_URL = "https://oauth2.googleapis.com/token"
 
     def self.refresh!(user)
         return unless user.google_refresh_token.present?
@@ -8,7 +8,7 @@ class GoogleOauthService
             client_id: ENV.fetch("GOOGLE_CLIENT_ID"),
             client_secret: ENV.fetch("GOOGLE_CLIENT_SECRET"),
             refresh_token: user.google_refresh_token,
-            grant_type: 'refresh_token'
+            grant_type: "refresh_token"
         }
         response = HTTParty.post(
             TOKEN_URL,
@@ -18,8 +18,8 @@ class GoogleOauthService
 
         if response.success?
             user.update(
-                google_access_token: response['access_token'],
-                google_token_expires_at: Time.current + response['expires_in'].to_i
+                google_access_token: response["access_token"],
+                google_token_expires_at: Time.current + response["expires_in"].to_i
             )
         else
             Rails.logger.error("Failed to refresh Google access token for user #{user.id}: #{response.body}")

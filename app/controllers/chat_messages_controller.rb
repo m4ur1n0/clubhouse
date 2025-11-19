@@ -18,7 +18,6 @@ class ChatMessagesController < ApplicationController
   end
 
   def edit
-
   end
 
   def update

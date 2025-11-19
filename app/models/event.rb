@@ -1,12 +1,12 @@
 class Event < ApplicationRecord
   belongs_to :club
   belongs_to :user
-  
+
 
   # Virtual attributes used by the form (not persisted)
   attr_accessor :recurring, :end_date
 
-  # Store list of attending user ids in a text column as an Array
+    # Store list of attending user ids in a text column as an Array
     def users_attending
         raw = self[:users_attending]
         return [] if raw.blank?
@@ -86,7 +86,7 @@ class Event < ApplicationRecord
   validates :name, presence: true
   validates :date, presence: true
   validates :description, length: { maximum: 750, message: "must not exceed 750 characters" }
-  validate :recurring_end_after_start, if: -> {recurring == "1" && end_date.present? }
+  validate :recurring_end_after_start, if: -> { recurring == "1" && end_date.present? }
 
   def event_params
     params.require(:event).permit(:name, :date, :location, :description, :club_id, :recurring, :end_date)
@@ -103,8 +103,4 @@ class Event < ApplicationRecord
         errors.add(:end_date, "is not a valid date")
     end
   end
-  
-  
-
-
 end

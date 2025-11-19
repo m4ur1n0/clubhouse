@@ -15,12 +15,12 @@ class GoogleCalendarService
       service.authorization = @user.google_access_token
 
       event = Google::Apis::CalendarV3::Event.new(event_params)
-      service.insert_event('primary', event)
+      service.insert_event("primary", event)
 
     rescue => e
       Rails.logger.error("Google Calendar failed: #{e.class} - #{e.message}")
       # Fail silently — RSVP should still succeed
-      return nil
+      nil
     end
   end
 
@@ -35,10 +35,10 @@ class GoogleCalendarService
       service.authorization = @user.google_access_token
 
       service.list_events(
-        'primary',
+        "primary",
         max_results: 10,
         single_events: true,
-        order_by: 'startTime',
+        order_by: "startTime",
         time_min: Time.now.iso8601
       )
     rescue => e

@@ -137,7 +137,7 @@ end
 Then("each {string} event is owned by {string}") do |event_name, owner_name|
   owner = user_named(owner_name)
   events = @club.events.where(name: event_name)
-  expect(events.pluck(:user_id).uniq).to eq([owner.id])
+  expect(events.pluck(:user_id).uniq).to eq([ owner.id ])
 end
 
 Then("the request is rejected") do

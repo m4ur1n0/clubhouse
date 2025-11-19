@@ -11,7 +11,7 @@ class ClubsController < ApplicationController
   # GET /clubs/1 or /clubs/1.json
   def show
     # Only show upcoming events (exclude events whose date has already passed)
-    @events = @club.events.where('date >= ?', Time.current).order(date: :asc)
+    @events = @club.events.where("date >= ?", Time.current).order(date: :asc)
     @chat_messages = @club.chat_messages.includes(:user).order(created_at: :asc)
     @new_chat_message = @club.chat_messages.build
     @can_chat = current_user&.owns?(@club) || current_user&.member_of?(@club)
@@ -26,7 +26,7 @@ class ClubsController < ApplicationController
   # GET /clubs/1/edit
   def edit
   end
-  
+
   # POST /clubs or /clubs.json
   def create
     # @club = Club.new(club_params)
@@ -95,7 +95,7 @@ class ClubsController < ApplicationController
     events.each do |event|
         next if event.user_attending?(current_user)
 
-        event.users_attending = event.users_attending + [current_user.id]
+        event.users_attending = event.users_attending + [ current_user.id ]
         event.save!
 
         # Push to Google Calendar if possible
@@ -110,7 +110,6 @@ class ClubsController < ApplicationController
     end
 
     redirect_to club_path(club), notice: "You RSVP'd to #{events.count} upcoming events!"
-    
   end
 
 

@@ -17,10 +17,10 @@ class User < ApplicationRecord
   end
 
   def self.from_google!(data)
-    user = find_or_initialize_by(google_id: data['id'])
-    user.name = data['name']
-    user.email = data['email']
-    user.avatar_url = data['picture']
+    user = find_or_initialize_by(google_id: data["id"])
+    user.name = data["name"]
+    user.email = data["email"]
+    user.avatar_url = data["picture"]
     user.save!
     user
   end
@@ -36,7 +36,4 @@ class User < ApplicationRecord
   def google_connected?
     google_access_token.present?
   end
-    
-
-
 end

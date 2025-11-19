@@ -33,15 +33,15 @@ class EventsController < ApplicationController
   def create
     @event = Event.new(event_params.merge(user: current_user))
     # ensure the creator is marked as attending by default
-    @event.users_attending = [current_user.id] if @event.users_attending.blank?
-    
+    @event.users_attending = [ current_user.id ] if @event.users_attending.blank?
+
     if @event.recurring == "1" && @event.end_date.present?
       start_date = @event.date.to_date
       end_date = Date.parse(params[:event][:end_date])
-      
+
       saved_events = []
       current_date = start_date
-      
+
       while current_date <= end_date
         new_event = Event.new(
           name: @event.name,
@@ -50,12 +50,12 @@ class EventsController < ApplicationController
           club_id: @event.club_id,
           user: @event.user
         )
-        new_event.users_attending = [current_user.id]
-        
+        new_event.users_attending = [ current_user.id ]
+
         saved_events << new_event if new_event.save
         current_date += 7.days
       end
-      
+
       if saved_events.any?
         redirect_to @event.club, notice: "#{saved_events.count} recurring events were created!"
       else
@@ -101,12 +101,12 @@ class EventsController < ApplicationController
 
     unless current_user
         redirect_to google_login_path(return_to: rsvp_start_event_path(@event)),
-        alert: 'You must be signed in to RSVP.'
+        alert: "You must be signed in to RSVP."
         return
     end
 
     unless @event.user_attending?(current_user)
-        @event.users_attending = @event.users_attending + [current_user.id]
+        @event.users_attending = @event.users_attending + [ current_user.id ]
         @event.save!
 
         # Attempt Google Calendar push BUT FAIL-OPEN
@@ -117,7 +117,7 @@ class EventsController < ApplicationController
             end
         rescue => e
             Rails.logger.error("Calendar push failed: #{e.class} - #{e.message}")
-            # No user-facing error
+          # No user-facing error
         end
     end
 
@@ -129,16 +129,16 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
 
     unless current_user
-        redirect_to google_login_path(return_to: event_path(@event)), alert: 'Please sign in first.'
+        redirect_to google_login_path(return_to: event_path(@event)), alert: "Please sign in first."
         return
     end
 
     if @event.user_attending?(current_user)
-        @event.users_attending = @event.users_attending - [current_user.id]
+        @event.users_attending = @event.users_attending - [ current_user.id ]
         @event.save!
     end
 
-    redirect_to event_path(@event), notice: 'You have cancelled your RSVP.'
+    redirect_to event_path(@event), notice: "You have cancelled your RSVP."
   end
 
 
@@ -161,14 +161,14 @@ class EventsController < ApplicationController
         cid = params[:club_id] || event_params[:club_id]
         @club = Club.find(cid)
     rescue ActionController::ParameterMissing, ActiveRecord::RecordNotFound
-        redirect_to clubs_path, alert: 'Club not found.'
-        return
+        redirect_to clubs_path, alert: "Club not found."
+        nil
     end
 
     def ensure_membership!
         club = @club || @event&.club
         unless current_user&.member_of?(club) || current_user&.owns?(club)
-            redirect_to club_path(club), alert: 'You must be a member of this club to do this!'
+            redirect_to club_path(club), alert: "You must be a member of this club to do this!"
         end
     end
 
@@ -177,5 +177,4 @@ class EventsController < ApplicationController
     def event_params
       params.require(:event).permit(:name, :date, :location, :club_id, :recurring, :end_date, :description)
     end
-
 end

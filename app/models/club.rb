@@ -5,5 +5,5 @@ class Club < ApplicationRecord
     has_many :members, through: :memberships, source: :user
     has_many :chat_messages, dependent: :destroy
 
-    validates :name, presence: true 
+    validates :name, presence: true
 end
