@@ -5,7 +5,40 @@ class ClubsController < ApplicationController
 
   # GET /clubs or /clubs.json
   def index
+    @query = params[:q].to_s.strip
     @clubs = Club.all
+
+    if @query.present?
+      raw_query = @query.downcase
+      escaped_query = ActiveRecord::Base.sanitize_sql_like(raw_query)
+      like_query = "%#{escaped_query}%"
+
+      @clubs = @clubs.where(
+        "LOWER(name) LIKE :q OR LOWER(COALESCE(description, '')) LIKE :q",
+        q: like_query
+      )
+
+      position_target = ActiveRecord::Base.connection.quote(raw_query)
+      adapter = ActiveRecord::Base.connection.adapter_name.downcase
+
+      if adapter.include?("sqlite")
+        name_pos = "NULLIF(INSTR(LOWER(name), #{position_target}), 0)"
+        desc_pos = "NULLIF(INSTR(LOWER(COALESCE(description, '')), #{position_target}), 0)"
+        order_sql = <<~SQL.squish
+          COALESCE(MIN(#{name_pos}, #{desc_pos}), 99999), name ASC
+        SQL
+      else
+        name_pos = "NULLIF(POSITION(#{position_target} IN LOWER(name)), 0)"
+        desc_pos = "NULLIF(POSITION(#{position_target} IN LOWER(COALESCE(description, ''))), 0)"
+        order_sql = <<~SQL.squish
+          COALESCE(LEAST(#{name_pos}, #{desc_pos}), 99999), name ASC
+        SQL
+      end
+
+      @clubs = @clubs.order(Arel.sql(order_sql))
+    else
+      @clubs = @clubs.order(:name)
+    end
   end
 
   # GET /clubs/1 or /clubs/1.json
