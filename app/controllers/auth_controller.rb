@@ -77,7 +77,17 @@ class AuthController < ApplicationController
 
     if user.save
         session[:user_id] = user.id
-        redirect_to session.delete(:return_to) || root_path, notice: 'Successfully signed in with Google!'
+
+        # redirect_to session.delete(:return_to) || root_path, notice: 'Successfully signed in with Google!'
+        return_to = session.delete(:return_to)
+        if return_to.present?
+            # DO NOT show a notice, as RSVP has a more important notice
+            redirect_to return_to
+        else
+            redirect_to root_path, notice: 'Successfully signed in with Google!'
+        end
+
+
     else
         Rails.logger.error("Failed to save user: #{user.errors.full_messages.join(', ')}")
         redirect_to root_path, alert: 'Failed to save user!'

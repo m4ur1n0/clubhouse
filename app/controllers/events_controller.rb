@@ -97,6 +97,7 @@ class EventsController < ApplicationController
   # rzxsvp!
   def rsvp
     @event = Event.find(params[:id])
+    # flash.discard
 
     unless current_user
         redirect_to google_login_path(return_to: rsvp_start_event_path(@event)),
@@ -144,6 +145,7 @@ class EventsController < ApplicationController
   def rsvp_start
     @event = Event.find(params[:id])
     @auto_rsvp = true
+    # flash.discard
     render :show
   end
 
