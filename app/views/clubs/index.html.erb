@@ -45,6 +45,34 @@
   </div>
 
   <%# Tab Content %>
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <%= form_with url: clubs_path, method: :get, local: true do |form| %>
+            <div class="row g-2 align-items-center">
+              <div class="col-lg-8 col-md-7 col-sm-12">
+                <div class="input-group input-group-lg">
+                  <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                  <%= form.search_field :q, value: @query, class: "form-control", placeholder: "Search clubs by name or description..." %>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-5 col-sm-12 d-flex gap-2">
+                <%= form.submit "Search", class: "btn btn-northwestern-purple btn-lg flex-fill shadow-sm" %>
+                <% if @query.present? %>
+                  <%= link_to "Clear", clubs_path, class: "btn btn-outline-secondary btn-lg flex-fill" %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+          <% if @query.present? %>
+            <p class="text-muted mb-0 mt-2 small">Showing <%= pluralize(@clubs.size, "result") %> for "<%= @query %>"</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="row g-4" id="clubs">
     <% if @clubs.any? %>
       <% @clubs.each do |club| %>
