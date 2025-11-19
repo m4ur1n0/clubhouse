@@ -3,13 +3,13 @@
 
 <h1>Events</h1>
 
-<div id="events">
+<section id="events">
   <% @events.each do |event| %>
     <%= render event %>
     <p>
       <%= link_to "Show this event", event, class: "btn btn-outline-secondary btn-sm" %>
     </p>
   <% end %>
-</div>
+</section>
 
 <%= link_to "New event", new_event_path %>

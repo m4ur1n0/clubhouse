@@ -1,4 +1,4 @@
-<div class="container my-4">
+<section class="container my-4">
   <div class="position-relative mb-2">
     <div class="d-flex flex-row flex-wrap width-full gap-2" style="justify-content: space-between; align-items: center;">
         
@@ -42,7 +42,7 @@
     <p class="lead text-muted"><%= @club.description %></p>
   </div>
 
-  <div class="card shadow-sm mb-4">
+  <section class="card shadow-sm mb-4">
     <div class="card-header bg-white">
       <h2 class="h3 mb-0 d-flex align-items-center text-northwestern-purple">
         <i class="bi bi-calendar-event me-2"></i>
@@ -75,9 +75,9 @@
         </p>
       <% end %>
     </div>
-  </div>
+  </section>
 
-  <div class="card shadow-sm mb-4" id="club-chat">
+  <section class="card shadow-sm mb-4" id="club-chat">
     <div class="card-header bg-white">
       <h2 class="h3 mb-0 d-flex align-items-center text-northwestern-purple">
         <i class="bi bi-chat-dots me-2"></i>
@@ -150,7 +150,7 @@
         <%= link_to "Sign in with Google", "/auth/google_oauth2", class: "btn btn-northwestern-purple" %>
       <% end %>
     </div>
-  </div>
+  </section>
 
   <div class="d-flex gap-2">
     <% if current_user&.member_of?(@club) %>

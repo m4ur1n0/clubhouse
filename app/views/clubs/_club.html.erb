@@ -1,5 +1,5 @@
 <%= link_to club, class: "club-card-link text-decoration-none", id: dom_id(club) do %>
-  <div class="card h-100 shadow-sm club-card">
+  <article class="card h-100 shadow-sm club-card">
     <div class="card-header bg-gradient text-white py-3">
       <h5 class="card-title mb-0 fw-bold">
         <%= club.name %>
@@ -21,5 +21,5 @@
         <% end %>
       </div>
     </div>
-  </div>
+  </article>
 <% end %>
