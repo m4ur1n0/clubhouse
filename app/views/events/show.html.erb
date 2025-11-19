@@ -59,7 +59,7 @@
 
           <% if current_user.nil? %>
             <%= link_to "Log in with Google to RSVP",
-                    new_auth_path(return_to: rsvp_event_path(@event)),
+                    google_login_path(return_to: rsvp_start_event_path(@event)),
                     class: "btn btn-primary" %>
 
           <% elsif !@event.user_attending?(current_user) %>
@@ -104,4 +104,16 @@
       </div>
     </div>
   </div>
+
+  <% if @auto_rsvp %>
+    <form id="auto-rsvp" action="<%= rsvp_event_path(@event) %>" method="post" style="display:none;">
+        <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    </form>
+
+    <script>
+        document.getElementById("auto-rsvp").submit();
+    </script>
+  <% end %>
+
+
 </div>

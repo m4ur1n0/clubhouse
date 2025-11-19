@@ -99,7 +99,7 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
 
     unless current_user
-        redirect_to auth_google_oauth2_path(return_to: rsvp_event_path(@event)),
+        redirect_to google_login_path(return_to: rsvp_start_event_path(@event)),
         alert: 'You must be signed in to RSVP.'
         return
     end
@@ -128,7 +128,7 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
 
     unless current_user
-        redirect_to new_auth_path(return_to: event_path(@event)), alert: 'Please sign in first.'
+        redirect_to google_login_path(return_to: event_path(@event)), alert: 'Please sign in first.'
         return
     end
 
@@ -138,6 +138,13 @@ class EventsController < ApplicationController
     end
 
     redirect_to event_path(@event), notice: 'You have cancelled your RSVP.'
+  end
+
+
+  def rsvp_start
+    @event = Event.find(params[:id])
+    @auto_rsvp = true
+    render :show
   end
 
 

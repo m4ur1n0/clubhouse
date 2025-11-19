@@ -1,14 +1,22 @@
 Rails.application.routes.draw do
   get "memberships/create"
   get "memberships/destroy"
+
   # OAuth routes
+    # google helpers
+  get '/auth/google_oauth2',          to: 'auth#new',      as: :google_login
+  get '/auth/google_oauth2/callback', to: 'auth#callback', as: :google_callback
+    # regular oauth roots 
   get '/auth/:provider', to: 'auth#new', as: :auth
   get '/auth/:provider/callback', to: 'auth#callback'
   get '/auth/failure', to: 'auth#failure'
   get '/logout', to: 'auth#logout'
   
+
+  # this get functions as a post
   resources :events do
         member do
+            get :rsvp_start
             post :rsvp
             delete :unrsvp
 
