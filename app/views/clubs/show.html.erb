@@ -43,11 +43,20 @@
   </div>
 
   <section class="card shadow-sm mb-4">
-    <div class="card-header bg-white">
-      <h2 class="h3 mb-0 d-flex align-items-center text-northwestern-purple">
-        <i class="bi bi-calendar-event me-2"></i>
-        Upcoming Events
-      </h2>
+    <div class="card-header bg-white d-flex justify-content-between align-items-center w-100 " display="flex-wrap:no-wrap;">
+        <h2 class="h3 mb-0 d-flex align-items-center text-northwestern-purple ">
+            <i class="bi bi-calendar-event me-2"></i>
+            Upcoming Events
+        </h2>
+
+        <% if current_user %>
+            <%= button_to "RSVP to All",
+                rsvp_all_events_club_path(@club),
+                method: :post,
+                class: "btn btn-northwestern-purple" 
+            %>
+        <% end %>
+
     </div>
     <div class="card-body">
       <% if @events.any? %>

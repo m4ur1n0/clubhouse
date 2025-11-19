@@ -21,8 +21,13 @@ Rails.application.routes.draw do
             delete :unrsvp
 
         end
-    end
+  end
+
   resources :clubs do
+    member do
+        post :rsvp_all_events
+    end
+
     resource :membership, only: [:create, :destroy]
     resources :chat_messages, only: [:create, :edit, :update, :destroy]
     resources :events, only: [:index, :new, :create, :edit, :update, :destroy]

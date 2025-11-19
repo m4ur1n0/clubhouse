@@ -73,6 +73,47 @@ class ClubsController < ApplicationController
     end
   end
 
+
+  def rsvp_all_events
+    club = Club.find(params[:id])
+
+    unless current_user
+        redirect_to google_login_path(return_to: club_path(club)),
+        alert: "Please sign in first."
+        return
+    end
+
+    # Ensure user is a member of the club
+    unless current_user.member_of?(club)
+        redirect_to club_path(club), alert: "You must be a club member to RSVP."
+        return
+    end
+
+    # Get all current or future events
+    events = club.events.where("date >= ?", Time.current)
+
+    events.each do |event|
+        next if event.user_attending?(current_user)
+
+        event.users_attending = event.users_attending + [current_user.id]
+        event.save!
+
+        # Push to Google Calendar if possible
+        begin
+            if current_user.google_access_token.present?
+                GoogleCalendarService.new(current_user).create_event(event.to_google_event)
+            end
+
+        rescue => e
+            Rails.logger.error("Calendar push failed for event #{event.id}: #{e.message}")
+        end
+    end
+
+    redirect_to club_path(club), notice: "You RSVP'd to #{events.count} upcoming events!"
+    
+  end
+
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_club
