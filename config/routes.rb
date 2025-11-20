@@ -2,6 +2,13 @@ Rails.application.routes.draw do
   get "memberships/create"
   get "memberships/destroy"
 
+  # Email/Password Authentication routes
+  get  "/signin",  to: "sessions#new",     as: :signin
+  post "/signin",  to: "sessions#create"
+  get  "/signup",  to: "registrations#new", as: :signup
+  post "/signup",  to: "registrations#create"
+  delete "/signout", to: "sessions#destroy", as: :signout
+
   # OAuth routes
   # google helpers
   get "/auth/google_oauth2",          to: "auth#new",      as: :google_login

@@ -100,7 +100,7 @@ class EventsController < ApplicationController
     # flash.discard
 
     unless current_user
-        redirect_to google_login_path(return_to: rsvp_start_event_path(@event)),
+        redirect_to signin_path,
         alert: "You must be signed in to RSVP."
         return
     end
@@ -129,7 +129,7 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
 
     unless current_user
-        redirect_to google_login_path(return_to: event_path(@event)), alert: "Please sign in first."
+        redirect_to signin_path, alert: "Please sign in first."
         return
     end
 

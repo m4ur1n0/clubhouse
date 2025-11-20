@@ -67,9 +67,17 @@ class AuthController < ApplicationController
 
     # find or create user and store tokens
     user = User.find_or_initialize_by(email: user_data["email"])
+    
+    # Check if this is an existing password-based account
+    if user.persisted? && user.password_provider?
+      redirect_to signin_path, alert: "This email is already registered with a password. Please sign in with your password instead."
+      return
+    end
+    
     user.name = user_data["name"]
     user.google_id = user_data["id"]
     user.avatar_url = user_data["picture"]
+    user.provider = 'google'
 
     user.google_access_token = access_token
     user.google_refresh_token = refresh_token if refresh_token.present?

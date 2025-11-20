@@ -1,6 +1,14 @@
 class User < ApplicationRecord
+  has_secure_password validations: false # We'll handle password validation manually
+  
   validates :email, presence: true, uniqueness: true
-  validates :google_id, presence: true, uniqueness: true
+  validates :provider, presence: true, inclusion: { in: %w[google password] }
+  
+  # Provider-specific validations
+  validates :google_id, uniqueness: { allow_nil: true }
+  validates :google_id, presence: true, if: -> { provider == 'google' }
+  validates :password, presence: true, length: { minimum: 6 }, if: -> { provider == 'password' && password.present? }
+  validates :password_digest, presence: true, if: -> { provider == 'password' }
 
   has_many :clubs, dependent: :nullify # clubs they created
   has_many :memberships, dependent: :destroy
@@ -13,6 +21,7 @@ class User < ApplicationRecord
       user.name = auth.info.name
       user.email = auth.info.email
       user.avatar_url = auth.info.image
+      user.provider = 'google'
     end
   end
 
@@ -21,6 +30,7 @@ class User < ApplicationRecord
     user.name = data["name"]
     user.email = data["email"]
     user.avatar_url = data["picture"]
+    user.provider = 'google'
     user.save!
     user
   end
@@ -35,5 +45,13 @@ class User < ApplicationRecord
 
   def google_connected?
     google_access_token.present?
+  end
+  
+  def google_provider?
+    provider == 'google'
+  end
+  
+  def password_provider?
+    provider == 'password'
   end
 end
