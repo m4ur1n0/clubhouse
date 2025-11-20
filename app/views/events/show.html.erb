@@ -55,8 +55,8 @@
           </h2>
 
           <% if current_user.nil? %>
-            <%= link_to "Log in with Google to RSVP",
-                    google_login_path(return_to: rsvp_start_event_path(@event)),
+            <%= link_to "Sign in to RSVP",
+                    signin_path,
                     class: "btn btn-primary" %>
 
           <% elsif !@event.user_attending?(current_user) %>

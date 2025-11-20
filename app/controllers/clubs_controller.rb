@@ -117,7 +117,7 @@ class ClubsController < ApplicationController
     club = Club.find(params[:id])
 
     unless current_user
-        redirect_to google_login_path(return_to: club_path(club)),
+        redirect_to signin_path,
         alert: "Please sign in first."
         return
     end

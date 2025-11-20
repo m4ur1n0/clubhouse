@@ -15,7 +15,9 @@ class ApplicationController < ActionController::Base
   end
 
   def require_user!
-    redirect_to root_path, alert: "Please sign in to continue." unless user_signed_in?
+    unless user_signed_in?
+      redirect_to signin_path, alert: "Please sign in to continue."
+    end
   end
 
   def authorize_owner!(club)
